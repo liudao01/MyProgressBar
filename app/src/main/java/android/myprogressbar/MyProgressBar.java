@@ -129,11 +129,22 @@ public class MyProgressBar extends ProgressBar {
 
         int width = rect.width();
 
+        //进度
         float radio = getProgress() * 1.0f / getMax();
         float progressPosX = (int) (mRealWidth * radio);
-        //在进度条上画上自定义文本 进度
-//        canvas.drawText(mText, 10 + width, y, mPaint);
-        canvas.drawText(mText, progressPosX, y, mPaint);
+
+        //起始点
+        int beginX = 10 + width;
+        //结束点
+        float textWidth = mPaint.measureText(mText);
+        float endX = mRealWidth - textWidth;
+        if (beginX > progressPosX- textWidth) {
+            canvas.drawText(mText, beginX, y, mPaint);
+        } else if (progressPosX- textWidth > endX) {
+            canvas.drawText(mText, endX, y, mPaint);
+        } else {
+            canvas.drawText(mText, progressPosX - textWidth, y, mPaint);
+        }
         canvas.restore();
     }
 }

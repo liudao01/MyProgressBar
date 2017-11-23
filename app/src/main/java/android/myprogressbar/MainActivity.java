@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     int x = progress++;
                     message.what = x;
                     handler.sendEmptyMessage(message.what);
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }
 
             } catch (InterruptedException e) {
