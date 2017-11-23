@@ -10,19 +10,23 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.ProgressBar;
 
+/**
+ * @author liuml.
+ * @explain 自定义progressbar
+ * @time 2017/11/23 17:57
+ */
 public class MyProgressBar extends ProgressBar {
-    private float RATIO = 0;
-    private float OFFSET_LEFT = 0;
-    private float OFFSET_TOP = 0;
+    private float ratio = 0;
+    private float offsetLeft = 0;
+    private float offsetTop = 0;
     private String leftText = "信息完成度";
     private Paint mPaint;
     private int mWidth;
     private int textsize = 40;
-    private int textpaddingleft;
     private String mText;
     public static int TEXT_SIZE = 0;
     private Context mContext;
-    private int textpaddingtop;
+    protected int mRealWidth;
 
     public MyProgressBar(Context context) {
         this(context, null);
@@ -62,48 +66,41 @@ public class MyProgressBar extends ProgressBar {
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-
+        mRealWidth = getMeasuredWidth() - getPaddingRight() - getPaddingLeft();
     }
 
     private void initDraw() {
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-
-
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTypeface(Typeface.DEFAULT);
         mPaint.setColor(Color.GRAY);
         //设置基线上那个点究竟是left,center,还是right  这里我设置为center
         mPaint.setTextAlign(Paint.Align.LEFT);
-
         setTextSize(textsize);
-
     }
 
     private void textSizeAdaptive() {
         //1.获取当前设备的屏幕大小
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-//        2.计算与你开发时设定的屏幕大小的纵横比(这里假设你开发时定的屏幕大小是480*800)
-
+        //2.计算与你开发时设定的屏幕大小的纵横比(这里假设你开发时定的屏幕大小是480*800)
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
         float ratioWidth = (float) screenWidth / 1080;
         float ratioHeight = (float) screenHeight / 1920;
 
-        RATIO = Math.min(ratioWidth, ratioHeight);
+        ratio = Math.min(ratioWidth, ratioHeight);
         if (ratioWidth != ratioHeight) {
-            if (RATIO == ratioWidth) {
-                OFFSET_LEFT = 0;
-                OFFSET_TOP = Math.round((screenHeight - 1920 * RATIO) / 2);
+            if (ratio == ratioWidth) {
+                offsetLeft = 0;
+                offsetTop = Math.round((screenHeight - 1920 * ratio) / 2);
             } else {
-                OFFSET_LEFT = Math.round((screenWidth - 1080 * RATIO) / 2);
-                OFFSET_TOP = 0;
+                offsetLeft = Math.round((screenWidth - 1080 * ratio) / 2);
+                offsetTop = 0;
             }
         }
         //3.根据上一步计算出来的最小纵横比来确定字体的大小(假定在1080*1920屏幕下字体大小设定为35)
-        TEXT_SIZE = Math.round(textsize * RATIO);
+        TEXT_SIZE = Math.round(textsize * ratio);
 
     }
-
 
 
     /**
@@ -117,31 +114,26 @@ public class MyProgressBar extends ProgressBar {
         mPaint.setTextSize(TEXT_SIZE);
     }
 
-    /**
-     * 调整进度字体的位置 初始位置为图片的正中央
-     *
-     * @param top
-     * @param left
-     */
-    public void setTextPadding(int top, int left) {
-        this.textpaddingleft = left;
-        this.textpaddingtop = top;
-    }
-
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         // TODO Auto-generated method stub
         super.onDraw(canvas);
+        canvas.save();
         mText = (getProgress() * 100 / getMax()) + "%";
-        Rect bounds = this.getProgressDrawable().getBounds();
-
         Rect rect = new Rect();
-//        mPaint.getTextBounds(leftText, 0, leftText.length(), rect);
-        //
-        float v = (mPaint.descent() - mPaint.ascent())/2;
-        //基线上方为负
-        int y = (getHeight() / 2)-(int)(mPaint.ascent()/2);
-        canvas.drawText(leftText, 5, y, mPaint);//在进度条上画上自定义文本
+        mPaint.getTextBounds(leftText, 0, leftText.length(), rect);
+        int y = (getHeight() / 2) - rect.centerY();
 
+        //在进度条上画上自定义文本
+        canvas.drawText(leftText, 5, y, mPaint);
+
+        int width = rect.width();
+
+        float radio = getProgress() * 1.0f / getMax();
+        float progressPosX = (int) (mRealWidth * radio);
+        //在进度条上画上自定义文本 进度
+//        canvas.drawText(mText, 10 + width, y, mPaint);
+        canvas.drawText(mText, progressPosX, y, mPaint);
+        canvas.restore();
     }
 }
