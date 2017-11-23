@@ -72,7 +72,7 @@ public class MyProgressBar extends ProgressBar {
     private void initDraw() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setTypeface(Typeface.DEFAULT);
-        mPaint.setColor(Color.GRAY);
+        mPaint.setColor(Color.BLUE);
         //设置基线上那个点究竟是left,center,还是right  这里我设置为center
         mPaint.setTextAlign(Paint.Align.LEFT);
         setTextSize(textsize);
