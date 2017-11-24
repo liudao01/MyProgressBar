@@ -99,7 +99,6 @@ public class MyProgressBar extends ProgressBar {
         }
         //3.根据上一步计算出来的最小纵横比来确定字体的大小(假定在1080*1920屏幕下字体大小设定为35)
         TEXT_SIZE = Math.round(textsize * ratio);
-
     }
 
 
