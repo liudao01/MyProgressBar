@@ -46,7 +46,7 @@ public class ThreadManager {
         /**
          * @param corePoolSize 核心线程池大小
          * @param maximumPoolSize   最大线程池大小
-         * @param keepAliveTime 保持存活的时间
+         * @param keepAliveTime 保持存活的时间  线程空闲时间 当线程空闲时间达到keepAliveTime时，线程会退出，直到线程数量=corePoolSize
          */
         public ThreadPoolProxy(int corePoolSize, int maximumPoolSize, long keepAliveTime) {
             this.mCorePoolSize = corePoolSize;
