@@ -11,8 +11,6 @@
         style="@style/InitProgressBar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:progress="30"
-        android:layout_alignParentBottom="true"
- />
+        android:progress="30" />
 
 </android.support.constraint.ConstraintLayout>
